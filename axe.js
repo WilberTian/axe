@@ -108,5 +108,79 @@
     }
 
     // cookie
+    function getCookie(name) {
+        if(document.cookie.length > 0) {
+            var start = document.cookie.indexOf(name+'=');
+
+            if(start != -1) {
+                start = start + name.length + 1;
+                end = document.cookie.indexOf(';', start);
+
+                if(end === -1) {
+                    end = document.cookie.length;
+                }
+
+                return unescape(document.cookie.substring(start, end));
+            }
+        }
+
+        return '';
+    }
+
+    function setCookie(name, value, expires, path, domain, secure) {
+        document.cookie = name + "=" + escape(value) +
+            // expires需要是GTM格式
+            ((expires) ? "; expires=" + expires : "") +
+            ((path) ? "; path=" + path : "") +
+            ((domain) ? "; domain=" + domain : "") +
+            ((secure) ? "; secure" : "");
+    }
+
+    function delCookie(name) {
+        var date = new Date();
+        date.setTime(date.getTime() - 1);
+ 
+        var value = this.getCookie(name);
+        if (value !== null) {
+            document.cookie = name + "=" + value + "; expires=" + date.toGMTString();
+        }
+    }
+
+
+    //
+    function getUrlVariables(url) {
+        url = url ? window.location.href : url;
+        var search = url.substring(url.lastIndexOf("?") + 1),
+            obj = {},
+            reg = /([^?&=]+)=([^?&=]*)/g;
+              
+        search.replace(reg, function (rs, $1, $2) {
+            var name = decodeURIComponent($1);
+            var val = decodeURIComponent($2);                
+            val = String(val);
+            obj[name] = val;
+            return rs;
+        });
+        
+        return obj;
+    }
+
+
+    //
+    function escapeHTML(str) {
+        return str.replace(/[<>"&]/g, function(match) {
+            switch(match) {
+                case '<':
+                    return '&lt;';
+                case '>':
+                    return '&gt;';
+                case '&':
+                    return '&amp;';
+                case '\"':
+                    return '&quot;';
+            }
+        })
+    }
+
 
 })(this);
